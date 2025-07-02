@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,11 +34,6 @@
     <label>員工姓名：
       <select name="name" required>
         <option value="">請選擇</option>
-        <option>吳涵傑</option>
-        <option>黃慧玲</option>
-        <option>浦仲豪</option>
-        <option>李宜綸</option>
-        <option>嚴儀倢</option>
         <option>何芯瑀</option>
         <option>張涵雅</option>
         <option>林俐安</option>
@@ -53,12 +47,17 @@
       </select>
     </label>
 
-    <label>備註：
-      <input type="text" name="note" />
+    <label>公司：
+      <input name="company" required />
     </label>
 
-    <input type="hidden" name="barcode" id="barcodeInput" />
-    <br />
+    <label>備註：
+      <input name="note" />
+    </label>
+
+    <!-- 隱藏欄位存掃碼內容 -->
+    <input type="text" id="barcodeInput" name="barcode" required hidden />
+
     <button type="submit">送出</button>
   </form>
 
@@ -73,7 +72,7 @@
       code => {
         resultSpan.textContent = code;
         barcodeInput.value = code;
-        qrScanner.stop();
+        qrScanner.stop(); // 掃到就關掉
       }
     );
 
@@ -84,11 +83,12 @@
       const data = {
         timestamp: new Date().toLocaleString("zh-TW"),
         name: formData.get("name"),
+        company: formData.get("company"),
         barcode: formData.get("barcode"),
         note: formData.get("note")
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbypRKUnwjXrDZlpxwWGzvUAf3Oj-cw3TyuCjxZqwKlxxSvdvaKD7nG9pK1LL966Z9d0/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbypRKUnwjXrDZ1pxwiGzwUAF3Oj-cw3Tyuc5yZqw1xxSvdaKD7nG9pKL1L966Z9d0/exec", {
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" }
