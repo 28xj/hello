@@ -8,8 +8,7 @@
     body {
       background-color: #000;
       color: #fff;
-      font-family: "新細明體", serif;
-      font-weight: bold;
+      font-size: 12px;
       text-align: center;
       padding: 30px;
     }
@@ -20,16 +19,13 @@
     #reader {
       width: 300px;
       margin: 0 auto 20px;
-      border: 2px solid #fff;
-      padding: 10px;
     }
     form {
       display: inline-block;
       text-align: left;
       background-color: #000;
-      border: 2px solid #fff;
-      padding: 20px;
-      width: 320px;
+      padding: 0;
+      width: 280px;
     }
     label {
       display: block;
@@ -42,10 +38,12 @@
       margin-top: 5px;
       background-color: #333;
       color: #fff;
-      border: 1px solid #fff;
-      font-family: "新細明體", serif;
-      font-weight: bold;
-      font-size: 14px;
+      border: none;
+      font-size: 12px;
+    }
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      background-color: #555;
     }
     button {
       margin-top: 15px;
@@ -58,7 +56,7 @@
       cursor: pointer;
     }
     p {
-      font-size: 14px;
+      font-size: 12px;
       margin: 10px 0;
     }
   </style>
@@ -68,7 +66,6 @@
   <h3>材料領用掃描系統</h3>
 
   <div id="reader"></div>
-  <p>掃描結果：<span id="result"></span></p>
 
   <form id="form">
     <label for="name">員工姓名：</label>
@@ -84,10 +81,14 @@
       <option>楊汶淩</option>
       <option>林亞璍</option>
       <option>吳順慧</option>
+      <option>公司吸收</option>
     </select>
 
     <label for="barcode">條碼序號：</label>
     <input type="text" id="barcodeInput" name="barcode" required>
+
+    <label for="quantity">數量：</label>
+    <input type="number" name="quantity" required>
 
     <label for="note">備註：</label>
     <textarea name="note" rows="2"></textarea>
@@ -96,7 +97,6 @@
   </form>
 
   <script>
-    const resultSpan = document.getElementById("result");
     const barcodeInput = document.getElementById("barcodeInput");
 
     const qrScanner = new Html5Qrcode("reader");
@@ -104,7 +104,6 @@
       { facingMode: "environment" },
       { fps: 10, qrbox: 200 },
       code => {
-        resultSpan.textContent = code;
         barcodeInput.value = code;
         qrScanner.stop();
       }
@@ -117,6 +116,7 @@
         timestamp: new Date().toLocaleString("zh-TW"),
         name: formData.get("name"),
         barcode: formData.get("barcode"),
+        quantity: formData.get("quantity"),
         note: formData.get("note")
       };
 
