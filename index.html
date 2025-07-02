@@ -29,7 +29,6 @@
     label {
       display: block;
       margin-top: 10px;
-      color: #fff;
     }
     select, input, textarea {
       width: 100%;
@@ -54,21 +53,17 @@
       font-weight: bold;
       cursor: pointer;
     }
-    p {
-      font-size: 12px;
-      margin: 10px 0;
-    }
   </style>
 </head>
 <body>
-  <img src="hello_tryit_logo.png" alt="Logo">
+  <img src="hello_tryit_logo.png" alt="Logo" />
   <h3>材料領用掃描系統</h3>
 
   <div id="reader"></div>
 
   <form id="form">
     <label for="name">員工姓名：</label>
-    <select name="name" required>
+    <select id="name" name="name" required>
       <option value="">請選擇</option>
       <option>何芯瑀</option>
       <option>張涵雅</option>
@@ -84,50 +79,57 @@
     </select>
 
     <label for="barcode">條碼序號：</label>
-    <input type="text" id="barcodeInput" name="barcode" required>
+    <input type="text" id="barcode" name="barcode" required />
 
     <label for="quantity">數量：</label>
-    <input type="number" name="quantity" required>
+    <input type="number" id="quantity" name="quantity" required />
 
     <label for="note">備註：</label>
-    <textarea name="note" rows="2"></textarea>
+    <textarea id="note" name="note" rows="2"></textarea>
 
     <button type="submit">送出</button>
   </form>
 
   <script>
-    const barcodeInput = document.getElementById("barcodeInput");
+    const barcodeInput = document.getElementById("barcode");
     const qrScanner = new Html5Qrcode("reader");
+
     qrScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 200 },
-      code => {
+      (code) => {
         barcodeInput.value = code;
-        qrScanner.stop(); // 掃描一次後暫停
+        qrScanner.stop();
       }
     );
 
-    document.getElementById("form").addEventListener("submit", e => {
+    document.getElementById("form").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = {
-        name: formData.get("name"),
-        barcode: formData.get("barcode"),
-        quantity: formData.get("quantity"),
-        note: formData.get("note")
-      };
 
-      fetch("https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" }
-      })
-      .then(res => res.text())
-      .then(msg => {
-        alert("✅ 成功送出！");
+      const name = document.getElementById("name").value;
+      const barcode = document.getElementById("barcode").value;
+      const quantity = document.getElementById("quantity").value;
+      const note = document.getElementById("note").value;
+
+      const params = new URLSearchParams({
+        name,
+        barcode,
+        quantity,
+        note,
+      });
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec", {
+          method: "POST",
+          body: params,
+        });
+
+        const result = await response.text();
+        alert("送出成功：" + result);
         location.reload();
-      })
-      .catch(err => alert("❌ 送出失敗：" + err));
+      } catch (error) {
+        alert("送出失敗：" + error);
+      }
     });
   </script>
 </body>
