@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <title>材料領用掃描系統</title>
@@ -12,7 +11,7 @@
       font-size: 12px;
       text-align: center;
       padding: 30px;
-      font-family: "微軟正黑體", sans-serif;
+      font-family: Arial, sans-serif;
     }
     img {
       height: 60px;
@@ -30,6 +29,7 @@
     label {
       display: block;
       margin-top: 10px;
+      color: #fff;
     }
     select, input, textarea {
       width: 100%;
@@ -56,7 +56,7 @@
     }
     p {
       font-size: 12px;
-      margin: 5px 0;
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -70,28 +70,21 @@
     <label for="name">員工姓名：</label>
     <select name="name" required>
       <option value="">請選擇</option>
-      <option>公司吸收</option
-      <option>黃慧鈴</option>
-      <option>吳涵傑</option>
-      <option>浦仲豪</option>
-      <option>魏辰芬</option>
       <option>何芯瑀</option>
       <option>張涵雅</option>
       <option>林俐安</option>
       <option>彭佳琳</option>
-      <option>嚴儀倢</option>
+      <option>魏辰芬</option>
       <option>陳琬琳</option>
       <option>田采璇</option>
       <option>楊汶淩</option>
       <option>林亞璍</option>
-      <option>李宜綸</option>
       <option>吳順慧</option>
+      <option>公司吸收</option>
     </select>
 
     <label for="barcode">條碼序號：</label>
-    <input type="text" id="barcodeInput" name="barcode" required readonly>
-
-    <p id="productNameDisplay"></p>
+    <input type="text" id="barcodeInput" name="barcode" required>
 
     <label for="quantity">數量：</label>
     <input type="number" name="quantity" required>
@@ -104,24 +97,12 @@
 
   <script>
     const barcodeInput = document.getElementById("barcodeInput");
-    const productNameDisplay = document.getElementById("productNameDisplay");
-
-    const productMap = {
-      "4562210012922": "fiole 【10MT】",
-      "4562210011819": "fiole 【12GP】",
-      "4562210011277": "fiole 【10GP】",
-      "4562210011260": "fiole 【8GP】",
-      "4562210011499": "fiole 【P10】",
-      "4562210011482": "fiole 【P8】",
-    };
-
     const qrScanner = new Html5Qrcode("reader");
     qrScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 200 },
       code => {
         barcodeInput.value = code;
-        productNameDisplay.innerText = productMap[code] || "無對應產品";
         qrScanner.stop();
       }
     );
@@ -130,15 +111,14 @@
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = {
-        timestamp: new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei" }),
+        timestamp: new Date().toLocaleString("zh-TW"),
         name: formData.get("name"),
         barcode: formData.get("barcode"),
-        product: productMap[formData.get("barcode")] || "",
         quantity: formData.get("quantity"),
         note: formData.get("note")
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbz83hLzAuaoy0dCJErJObseK75AfLceVkooaCF8YmUyfyS2JNr5Bbd35_W2RDzT4snU/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec", {
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" }
