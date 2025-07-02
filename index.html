@@ -103,7 +103,7 @@
       { fps: 10, qrbox: 200 },
       code => {
         barcodeInput.value = code;
-        qrScanner.stop();
+        qrScanner.stop(); // 掃描一次後暫停
       }
     );
 
@@ -111,7 +111,6 @@
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = {
-        timestamp: new Date().toLocaleString("zh-TW"),
         name: formData.get("name"),
         barcode: formData.get("barcode"),
         quantity: formData.get("quantity"),
@@ -125,10 +124,10 @@
       })
       .then(res => res.text())
       .then(msg => {
-        alert("送出成功！");
+        alert("✅ 成功送出！");
         location.reload();
       })
-      .catch(err => alert("送出失敗: " + err));
+      .catch(err => alert("❌ 送出失敗：" + err));
     });
   </script>
 </body>
