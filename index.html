@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>材料領用紀錄</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: "新細明體", PMingLiU, serif;
+      font-size: 12px;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    label, select, input, button, textarea {
+      display: block;
+      margin: 10px auto;
+      width: 100%;
+      font-size: 12px;
+    }
+    textarea {
+      resize: vertical;
+    }
+    img.logo {
+      width: 100px;
+      margin: 10px auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="logo.png" alt="LOGO" class="logo">
+    <h2>材料領用紀錄表單</h2>
+    <form id="materialForm">
+      <label for="employee">員工姓名</label>
+      <select id="employee" name="employee" required>
+        <option value="">請選擇</option>
+        <option>公司</option>
+        <option>吳涵傑</option>
+        <option>黃慧玲</option>
+        <option>浦仲豪</option>
+        <option>李宜綸</option>
+        <option>嚴儀倢</option>
+        <option>何芯瑀</option>
+        <option>張涵雅</option>
+        <option>林俐安</option>
+        <option>彭佳琳</option>
+        <option>魏辰芬</option>
+        <option>陳琬琳</option>
+        <option>田采璇</option>
+        <option>楊汶淩</option>
+        <option>林亞璍</option>
+        <option>吳順慧</option>
+      </select>
+
+      <label for="barcode">掃描條碼</label>
+      <input type="text" id="barcode" name="barcode" required placeholder="請掃描條碼">
+
+      <label for="quantity">數量</label>
+      <input type="number" id="quantity" name="quantity" min="1" required>
+
+      <label for="note">備註</label>
+      <textarea id="note" name="note" rows="2" placeholder="可填寫額外說明"></textarea>
+
+      <button type="submit">送出</button>
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbypRKUnwjXrDZlpxwWGzvUAf3Oj-cw3TyuCjxZqwKlxxSvdvaKD7nG9pK1LL966Z9d0/exec';
+    const form = document.getElementById('materialForm');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const data = new FormData(form);
+      data.append("timestamp", new Date().toLocaleString("sv-SE"));
+
+      fetch(scriptURL, { method: 'POST', body: data })
+        .then(response => {
+          status.innerHTML = "已成功送出！";
+          form.reset();
+        })
+        .catch(error => {
+          status.innerHTML = "送出失敗，請稍後再試。";
+          console.error('Error!', error.message);
+        });
+    });
+
+    // 啟用相機掃碼（需 HTTPS 網域才支援）
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      console.log("此裝置支援相機功能，可結合掃碼程式使用");
+    } else {
+      console.warn("此裝置無法使用相機");
+    }
+  </script>
+</body>
+</html>
