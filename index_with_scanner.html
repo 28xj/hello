@@ -2,61 +2,95 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>材料領用掃碼系統</title>
+  <title>材料領用掃描系統</title>
   <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     body {
-      font-family: "新細明體", sans-serif;
-      font-size: 12px;
+      background-color: #000;
+      color: #fff;
+      font-family: "新細明體", serif;
+      font-weight: bold;
+      text-align: center;
+      padding: 30px;
+    }
+    img {
+      height: 60px;
+      margin-bottom: 20px;
+    }
+    #reader {
+      width: 300px;
+      margin: 0 auto 20px;
+      border: 2px solid #fff;
+      padding: 10px;
+    }
+    form {
+      display: inline-block;
+      text-align: left;
+      background-color: #000;
+      border: 2px solid #fff;
       padding: 20px;
+      width: 320px;
     }
     label {
       display: block;
       margin-top: 10px;
+      color: #fff;
     }
-    select, input {
-      font-size: 12px;
+    select, input, textarea {
+      width: 100%;
+      padding: 6px;
+      margin-top: 5px;
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #fff;
+      font-family: "新細明體", serif;
+      font-weight: bold;
+      font-size: 14px;
     }
-    #reader {
-      width: 300px;
-      margin-top: 20px;
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #fff;
+      color: #000;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    p {
+      font-size: 14px;
+      margin: 10px 0;
     }
   </style>
 </head>
 <body>
-  <img src="hello_tryit_logo.png" alt="Logo" height="50" />
-  <h3>材料領用掃碼系統</h3>
+  <img src="hello_tryit_logo.png" alt="Logo">
+  <h3>材料領用掃描系統</h3>
 
   <div id="reader"></div>
   <p>掃描結果：<span id="result"></span></p>
 
   <form id="form">
-    <label>員工姓名：
-      <select name="name" required>
-        <option value="">請選擇</option>
-        <option>何芯瑀</option>
-        <option>張涵雅</option>
-        <option>林俐安</option>
-        <option>彭佳琳</option>
-        <option>魏辰芬</option>
-        <option>陳琬琳</option>
-        <option>田采璇</option>
-        <option>楊汶淩</option>
-        <option>林亞璍</option>
-        <option>吳順慧</option>
-      </select>
-    </label>
+    <label for="name">員工姓名：</label>
+    <select name="name" required>
+      <option value="">請選擇</option>
+      <option>何芯瑀</option>
+      <option>張涵雅</option>
+      <option>林俐安</option>
+      <option>彭佳琳</option>
+      <option>魏辰芬</option>
+      <option>陳琬琳</option>
+      <option>田采璇</option>
+      <option>楊汶淩</option>
+      <option>林亞璍</option>
+      <option>吳順慧</option>
+    </select>
 
-    <label>公司：
-      <input name="company" required />
-    </label>
+    <label for="barcode">條碼序號：</label>
+    <input type="text" id="barcodeInput" name="barcode" required>
 
-    <label>備註：
-      <input name="note" />
-    </label>
-
-    <!-- 隱藏欄位存掃碼內容 -->
-    <input type="text" id="barcodeInput" name="barcode" required hidden />
+    <label for="note">備註：</label>
+    <textarea name="note" rows="2"></textarea>
 
     <button type="submit">送出</button>
   </form>
@@ -72,23 +106,21 @@
       code => {
         resultSpan.textContent = code;
         barcodeInput.value = code;
-        qrScanner.stop(); // 掃到就關掉
+        qrScanner.stop();
       }
     );
 
     document.getElementById("form").addEventListener("submit", e => {
       e.preventDefault();
-
       const formData = new FormData(e.target);
       const data = {
         timestamp: new Date().toLocaleString("zh-TW"),
         name: formData.get("name"),
-        company: formData.get("company"),
         barcode: formData.get("barcode"),
         note: formData.get("note")
       };
 
-      fetch("https://script.google.com/macros/s/AKfycbypRKUnwjXrDZ1pxwiGzwUAF3Oj-cw3Tyuc5yZqw1xxSvdaKD7nG9pKL1L966Z9d0/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbypRKUnwjXrD21pxwiGwzUAF3Oj-cw3Tyuc5yZqw1xx5vdvakD7nGPk1LL966Z9d0/exec", {
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" }
@@ -98,7 +130,7 @@
         alert("送出成功！");
         location.reload();
       })
-      .catch(err => alert("送出失敗：" + err));
+      .catch(err => alert("送出失敗: " + err));
     });
   </script>
 </body>
