@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>材料領用登記</title>
+  <style>
+    body {
+      font-family: "新細明體", sans-serif;
+      font-size: 12px;
+      background: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    img.logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    select, input[type="text"], input[type="number"], button {
+      font-family: "新細明體", sans-serif;
+      font-size: 12px;
+      padding: 5px;
+      width: 200px;
+      margin-bottom: 10px;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <img class="logo" src="hello_tryit_logo.png" alt="Logo" />
+  <h3>材料領用登記系統</h3>
+
+  <form id="form">
+    <label for="staff">員工姓名</label>
+    <select id="staff" required>
+      <option value="" disabled selected>請選擇員工</option>
+      <option>公司</option>
+      <option>吳涵傑</option>
+      <option>黃慧玲</option>
+      <option>浦仲豪</option>
+      <option>李宜綸</option>
+      <option>嚴儀倢</option>
+      <option>何芯瑀</option>
+      <option>張涵雅</option>
+      <option>林俐安</option>
+      <option>彭佳琳</option>
+      <option>魏辰芬</option>
+      <option>陳琬琳</option>
+      <option>田采璇</option>
+      <option>楊汶淩</option>
+      <option>林亞璍</option>
+      <option>吳順慧</option>
+    </select>
+
+    <label for="barcode">條碼序號</label>
+    <input type="text" id="barcode" placeholder="請掃描條碼" required>
+
+    <label for="quantity">數量</label>
+    <input type="number" id="quantity" placeholder="請輸入數量" required>
+
+    <label for="note">備註</label>
+    <input type="text" id="note" placeholder="可留空">
+
+    <button type="submit">送出</button>
+  </form>
+
+  <div id="status"></div>
+
+  <script>
+    document.getElementById("form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      con
