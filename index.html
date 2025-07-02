@@ -3,139 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <title>材料領用掃描系統</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     body {
       background-color: #000;
-      color: #fff;
-      font-size: 12px;
-      text-align: center;
-      padding: 30px;
-      font-family: Arial, sans-serif;
-    }
-    img {
-      height: 60px;
-      margin-bottom: 20px;
-    }
-    #reader {
-      width: 300px;
-      margin: 0 auto 20px;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
     form {
-      display: inline-block;
-      text-align: left;
-      width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 300px;
     }
-    label {
-      display: block;
-      margin-top: 10px;
-      color: #fff;
-    }
-    select, input, textarea {
-      width: 100%;
-      padding: 6px;
-      margin-top: 5px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      font-size: 12px;
-    }
-    select:focus, input:focus, textarea:focus {
-      outline: none;
-      background-color: #555;
+    input, select, textarea, button {
+      padding: 8px;
+      font-size: 14px;
     }
     button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 10px;
-      background-color: #fff;
-      color: #000;
+      background-color: #ccc;
       border: none;
-      font-weight: bold;
       cursor: pointer;
-    }
-    p {
-      font-size: 12px;
-      margin: 10px 0;
     }
   </style>
 </head>
 <body>
-  <img src="hello_tryit_logo.png" alt="Logo">
-  <h3>材料領用掃描系統</h3>
-
-  <div id="reader"></div>
+  <h2>材料領用掃描系統</h2>
 
   <form id="form">
-    <label for="name">員工姓名：</label>
-    <select id="name" name="name" required>
-      <option value="">請選擇</option>
-      <option>何芯瑀</option>
-      <option>張涵雅</option>
-      <option>林俐安</option>
-      <option>彭佳琳</option>
-      <option>魏辰芬</option>
-      <option>陳琬琳</option>
-      <option>田采璇</option>
-      <option>楊汶淩</option>
-      <option>林亞璍</option>
-      <option>吳順慧</option>
-      <option>公司吸收</option>
+    <label>員工姓名：</label>
+    <select name="name">
+      <option value="何芯瑋">何芯瑋</option>
+      <option value="小安">小安</option>
+      <option value="VOYU">VOYU</option>
+      <!-- 其他員工依需要新增 -->
     </select>
 
-    <label for="barcode">條碼序號：</label>
-    <input type="text" id="barcode" name="barcode" required>
+    <label>條碼序號：</label>
+    <input type="text" name="barcode" required />
 
-    <label for="quantity">數量：</label>
-    <input type="number" id="quantity" name="quantity" required>
+    <label>數量：</label>
+    <input type="number" name="quantity" required min="1" />
 
-    <label for="note">備註：</label>
-    <textarea id="note" name="note" rows="2"></textarea>
+    <label>備註：</label>
+    <textarea name="note" rows="2"></textarea>
 
     <button type="submit">送出</button>
   </form>
 
   <script>
-    const barcodeInput = document.getElementById("barcode");
-    const qrScanner = new Html5Qrcode("reader");
-    qrScanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 200 },
-      code => {
-        barcodeInput.value = code;
-        qrScanner.stop();
-      }
-    );
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec";
 
-    document.getElementById("form").addEventListener("submit", async function (e) {
+    document.getElementById("form").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const barcode = document.getElementById("barcode").value;
-      const quantity = document.getElementById("quantity").value;
-      const note = document.getElementById("note").value;
-
+      const form = new FormData(this);
       const params = new URLSearchParams();
-      params.append("name", name);
-      params.append("barcode", barcode);
-      params.append("quantity", quantity);
-      params.append("note", note);
-
-      try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: params.toString()
-        });
-
-        const result = await response.text();
-        alert("✅ 成功送出：\n" + result);
-        location.reload();
-      } catch (error) {
-        alert("❌ 發生錯誤：\n" + error);
+      for (const pair of form.entries()) {
+        params.append(pair[0], pair[1]);
       }
+
+      fetch(scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: params
+      })
+      .then(response => response.text())
+      .then(msg => {
+        alert("✅ 成功送出：\n" + msg);
+      })
+      .catch(error => {
+        alert("❌ 發生錯誤：\n" + error);
+      });
     });
   </script>
 </body>
