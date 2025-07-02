@@ -1,87 +1,34 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
-  <title>材料領用掃描系統</title>
-  <style>
-    body {
-      background-color: #000;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 300px;
-    }
-    input, select, textarea, button {
-      padding: 8px;
-      font-size: 14px;
-    }
-    button {
-      background-color: #ccc;
-      border: none;
-      cursor: pointer;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>材料領用登記表</title>
 </head>
-<body>
-  <h2>材料領用掃描系統</h2>
+<body style="background-color: black; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 100px;">
+  <h2>材料領用登記表</h2>
 
-  <form id="form">
-    <label>員工姓名：</label>
-    <select name="name">
-      <option value="何芯瑋">何芯瑋</option>
-      <option value="小安">小安</option>
-      <option value="VOYU">VOYU</option>
-      <!-- 其他員工依需要新增 -->
-    </select>
-
-    <label>條碼序號：</label>
-    <input type="text" name="barcode" required />
-
-    <label>數量：</label>
-    <input type="number" name="quantity" required min="1" />
-
-    <label>備註：</label>
-    <textarea name="note" rows="2"></textarea>
-
-    <button type="submit">送出</button>
+  <form method="POST" action="https://script.google.com/macros/s/AKfycbwF_n1U0Iqfxlrpk1mKcLuG1fd8eeHCuAwPubjZ5wKu39hhAFNyBGZH_mhQJak7v4hx6A/exec" target="_blank" style="width: 300px;">
+    <p>
+      <label>員工姓名：
+        <input type="text" name="employeeName" required style="width: 100%;" />
+      </label>
+    </p>
+    <p>
+      <label>條碼：
+        <input type="text" name="barcode" required style="width: 100%;" />
+      </label>
+    </p>
+    <p>
+      <label>數量：
+        <input type="number" name="quantity" required style="width: 100%;" />
+      </label>
+    </p>
+    <p>
+      <label>備註：
+        <input type="text" name="note" style="width: 100%;" />
+      </label>
+    </p>
+    <button type="submit" style="width: 100%; padding: 10px; background-color: white; color: black;">送出</button>
   </form>
-
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxCvyglMYTr0YCwk_ZIlOFJmXDsD-A-gjoOs-29NAE4vkIMAbvdhwBRqrSTrN0zda-pAg/exec";
-
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const form = new FormData(this);
-      const params = new URLSearchParams();
-      for (const pair of form.entries()) {
-        params.append(pair[0], pair[1]);
-      }
-
-      fetch(scriptURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: params
-      })
-      .then(response => response.text())
-      .then(msg => {
-        alert("✅ 成功送出：\n" + msg);
-      })
-      .catch(error => {
-        alert("❌ 發生錯誤：\n" + error);
-      });
-    });
-  </script>
 </body>
 </html>
